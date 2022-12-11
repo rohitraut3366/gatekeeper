@@ -234,7 +234,7 @@ disabledBuiltins: ["{http.send}"]
 psp:
   enabled: true
 upgradeCRDs:
-  enabled: false
+  enabled: true
   extraRules: []
 rbac:
   create: true
