@@ -45,3 +45,30 @@ resource "kubernetes_manifest" "constraint_template" {
     }
   }
 }
+
+resource "kubernetes_manifest" "constraint" {
+  manifest = {
+    "apiVersion" : "constraints.gatekeeper.sh/v1beta1",
+    "kind" : "K8sAllowedRepos",
+    "metadata" : {
+      "name" : "repo-is-openpolicyagent"
+    },
+    "spec" : {
+      "match" : {
+        "kinds" : [
+          {
+            "apiGroups" : [""],
+            "kinds" : ["Pod"]
+          }
+        ],
+        "namespaces" : ["default"]
+      },
+      "parameters" : {
+        "repos" : ["388418451245.dkr.ecr.us-west-2.amazonaws.com/"]
+      }
+    }
+  }
+  depends_on = [
+    kubernetes_manifest.constraint_template
+  ]
+}
