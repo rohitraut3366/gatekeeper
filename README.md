@@ -22,3 +22,45 @@ spec.containers[*].securityContext
 * <b>enforce:</b> Any Pods that violate the policy will be rejected
 * <b>audit:</b> Pods with violations will be allowed and an audit annotation will be added
 * <b>warn:</b> Pods that violate the policy will be allowed and a warning message will be sent back to the user.
+
+```
+resource "helm_release" "gatekeeper_system" {
+  count = var.gatekeeper_enabled ? 1 : 0
+
+  name       = "gatekeeper"
+  namespace  = local.gatekeeper_namespace
+  repository = "https://open-policy-agent.github.io/gatekeeper/charts"
+  chart      = "gatekeeper"
+  timeout    = 3600
+  wait       = true
+
+  values = [
+    jsonencode({
+      postUpgrade = {
+        labelNamespace = {
+          podSecurity = [
+            "pod-security.kubernetes.io/audit=restricted",
+            "pod-security.kubernetes.io/audit-version=latest",
+            "pod-security.kubernetes.io/warn=restricted",
+            "pod-security.kubernetes.io/warn-version=latest"
+          ]
+        }
+      }
+      postInstall = {
+        labelNamespace = {
+          podSecurity = [
+            "pod-security.kubernetes.io/audit=restricted",
+            "pod-security.kubernetes.io/audit-version=latest",
+            "pod-security.kubernetes.io/warn=restricted",
+            "pod-security.kubernetes.io/warn-version=latest"
+          ]
+        }
+      }
+      upgradeCRDs = {
+        enabled = false
+      }
+    })
+  ]
+}
+
+```
