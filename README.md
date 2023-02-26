@@ -4,6 +4,7 @@ The Open Policy Agent [Gatekeeper](https://open-policy-agent.github.io/gatekeepe
 
 
 ## Basics
+
 ### Policy Types
 * <b>Privileged:</b>  open and unrestricted
 * <b>Baseline:</b> Covers most common known privilege escalations and provides an easier onboarding
